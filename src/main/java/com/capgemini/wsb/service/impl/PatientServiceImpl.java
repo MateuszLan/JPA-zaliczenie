@@ -30,6 +30,9 @@ public class PatientServiceImpl implements PatientService
     @Override
     public PatientTO findById(Long id) {
         final PatientEntity entity = patientDao.findOne(id);
+        if (entity == null) {
+            throw new RuntimeException("Patient not found");
+        }
         return PatientMapper.mapToTO(entity);
     }
     @Override

@@ -22,6 +22,41 @@ public class PatientServiceTest {
     @Autowired
     private VisitService visitService;
 
+
+
+    @Test
+    public void testDeletePatientAndCheckVisitsAndDoctors() {
+        // Given
+        Long patientId = 1L;
+        PatientTO patientTO = patientService.findById(patientId);
+        assertNotNull(patientTO);
+        patientService.removePatient(patientId);
+        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
+            patientService.findById(patientId);
+        });
+        assertEquals("Patient not found", thrown.getMessage());
+    }
+
+    @Test
+    public void testFindPatientById() {
+        // Given
+        Long patientId = 3L;
+
+        // When
+        PatientTO patientTO = patientService.findById(patientId);
+
+        // Then
+        assertNotNull(patientTO);
+        assertTrue(patientTO.isTreatmentStatus());
+        assertNotNull(patientTO.getVisitTOs());
+        //dwie wizyty
+        assertEquals(2, patientTO.getVisitTOs().size());
+    }
+
+
+
+
+
     @Test
     public void testGetAllPatientVisitsByID(){
         PatientTO patientTO = patientService.findById(3L);
